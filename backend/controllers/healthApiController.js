@@ -1,4 +1,4 @@
-﻿const { getLatestTelemetry, executeSync } = require('../services/syncDaemon');
+const { getLatestTelemetry, executeSync } = require('../services/syncDaemon');
 const externalApiService = require('../services/externalApiService');
 
 exports.getLiveTelemetry = async (req, res) => {

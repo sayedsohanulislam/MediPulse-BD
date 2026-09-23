@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const OperationLogSchema = new mongoose.Schema({
   action: { type: String, required: true },

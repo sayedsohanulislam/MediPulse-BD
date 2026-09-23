@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const MedicineSchema = new mongoose.Schema({
   brandName: { type: String, required: true },

@@ -1,4 +1,4 @@
-﻿const axios = require('axios');
+const axios = require('axios');
 const app = require('./server');
 
 const runTests = async () => {

@@ -1,4 +1,4 @@
-﻿const hospitalsSeed = [
+const hospitalsSeed = [
   {
     _id: "hosp-001",
     name: "Dhaka Medical College Hospital (DMCH)",

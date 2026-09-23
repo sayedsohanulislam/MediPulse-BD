@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Hospital = require('../models/Hospital');
 const BloodDonor = require('../models/BloodDonor');
 const Medicine = require('../models/Medicine');

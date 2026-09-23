@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "medipulse-bd",
   "builds": [
     {
       "src": "backend/server.js",

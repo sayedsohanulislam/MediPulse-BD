@@ -1,4 +1,4 @@
-﻿const IncidentReport = require('../models/IncidentReport');
+const IncidentReport = require('../models/IncidentReport');
 const OperationLog = require('../models/OperationLog');
 const { getStore, getIsConnected } = require('../config/db');
 

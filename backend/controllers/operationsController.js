@@ -1,4 +1,4 @@
-﻿const HealthAlert = require('../models/HealthAlert');
+const HealthAlert = require('../models/HealthAlert');
 const OperationLog = require('../models/OperationLog');
 const { getStore, getIsConnected } = require('../config/db');
 const { healthAlertsSeed, speedDialContacts, epiVaccineSchedule } = require('../services/mockDataService');

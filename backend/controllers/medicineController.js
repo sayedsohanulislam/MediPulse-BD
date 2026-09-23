@@ -1,4 +1,4 @@
-﻿const Medicine = require('../models/Medicine');
+const Medicine = require('../models/Medicine');
 const { getStore, getIsConnected } = require('../config/db');
 const { medicinesSeed } = require('../services/mockDataService');
 

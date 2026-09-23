@@ -1,4 +1,4 @@
-﻿const cron = require('node-cron');
+const cron = require('node-cron');
 const externalApiService = require('./externalApiService');
 
 let cachedTelemetry = {

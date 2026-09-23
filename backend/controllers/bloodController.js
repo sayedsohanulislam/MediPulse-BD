@@ -1,4 +1,4 @@
-﻿const BloodDonor = require('../models/BloodDonor');
+const BloodDonor = require('../models/BloodDonor');
 const { getStore, getIsConnected } = require('../config/db');
 const { donorsSeed } = require('../services/mockDataService');
 

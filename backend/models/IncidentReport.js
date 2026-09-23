@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const IncidentReportSchema = new mongoose.Schema({
   reporterName: { type: String, default: 'Anonymous Citizen' },
