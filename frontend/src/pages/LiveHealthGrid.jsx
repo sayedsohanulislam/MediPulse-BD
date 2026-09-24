@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
-import { Building2, Heart, ShieldAlert, Wind, Thermometer, Layers, Filter } from 'lucide-react';
+import { Building2, Heart, ShieldAlert, Wind, Thermometer, Layers } from 'lucide-react';
 import { hospitalApi, bloodApi } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import { useTelemetry } from '../context/TelemetryContext';
@@ -9,14 +9,14 @@ import { useTelemetry } from '../context/TelemetryContext';
 // Fix Leaflet Default Icon issue in React/Vite
 const hospitalIcon = new L.DivIcon({
   className: 'custom-hosp-icon',
-  html: `<div style="background-color: #0284c7; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">🏥</div>`,
+  html: `<div style="background-color:#0284c7;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:bold;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">🏥</div>`,
   iconSize: [28, 28],
   iconAnchor: [14, 14]
 });
 
 const donorIcon = new L.DivIcon({
   className: 'custom-donor-icon',
-  html: `<div style="background-color: #e11d48; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">🩸</div>`,
+  html: `<div style="background-color:#e11d48;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">🩸</div>`,
   iconSize: [24, 24],
   iconAnchor: [12, 12]
 });
@@ -48,56 +48,90 @@ const LiveHealthGrid = () => {
     }).catch(() => {});
   }, []);
 
-  const filteredHospitals = selectedDistrict === 'All' 
-    ? hospitals 
+  const filteredHospitals = selectedDistrict === 'All'
+    ? hospitals
     : hospitals.filter(h => h.district.toLowerCase() === selectedDistrict.toLowerCase());
 
+  const aqi = telemetry?.airQuality?.usAqi || '--';
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-            {t('nav_live_grid')} (GIS Command Map)
-          </h1>
-          <p className="text-xs text-slate-500">
-            Interactive real-time map displaying hospitals, available ICU beds, blood donors, and vector hazard clusters
-          </p>
-        </div>
+    <div className="space-y-4 page-container">
+      {/* Header */}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative rounded-full h-3 w-3 bg-emerald-500" />
+            </span>
+          </div>
+          {t('nav_live_grid')} — GIS Command Map
+        </h1>
+        <p className="text-xs text-slate-400 mt-1 ml-11">
+          Real-time map: hospital ICU beds, blood donors, and dengue vector hotspots across Bangladesh
+        </p>
+      </div>
 
-        {/* Filter Controls */}
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => setShowHospitals(!showHospitals)}
-            className={`text-xs px-3 py-1.5 rounded-lg border font-medium flex items-center gap-1.5 transition ${
-              showHospitals ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-slate-200 text-slate-400'
-            }`}
-          >
-            <span>🏥 Hospitals ({filteredHospitals.length})</span>
-          </button>
+      {/* Live Stats Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'Hospitals on Map', value: filteredHospitals.length, color: 'text-sky-600', bg: 'bg-sky-50 border-sky-200', icon: '🏥' },
+          { label: 'Blood Donors', value: donors.length, color: 'text-rose-600', bg: 'bg-rose-50 border-rose-200', icon: '🩸' },
+          { label: 'Dengue Hotspots', value: dengueClusters.length, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', icon: '🦟' },
+          { label: 'Dhaka AQI', value: aqi, color: 'text-violet-600', bg: 'bg-violet-50 border-violet-200', icon: '💨' },
+        ].map((stat, idx) => (
+          <div key={idx} className={`pulse-card hover-lift p-3 border ${stat.bg} flex items-center gap-3`}>
+            <span className="text-2xl">{stat.icon}</span>
+            <div>
+              <div className={`text-xl font-extrabold ${stat.color}`}>{stat.value}</div>
+              <div className="text-[10px] text-slate-500">{stat.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-          <button
-            onClick={() => setShowDonors(!showDonors)}
-            className={`text-xs px-3 py-1.5 rounded-lg border font-medium flex items-center gap-1.5 transition ${
-              showDonors ? 'bg-rose-50 border-rose-300 text-rose-700' : 'bg-white border-slate-200 text-slate-400'
-            }`}
-          >
-            <span>🩸 Donors ({donors.length})</span>
-          </button>
+      {/* Filter Controls */}
+      <div className="pulse-card p-3 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold text-slate-500 mr-1">Toggle Layers:</span>
 
-          <button
-            onClick={() => setShowDengue(!showDengue)}
-            className={`text-xs px-3 py-1.5 rounded-lg border font-medium flex items-center gap-1.5 transition ${
-              showDengue ? 'bg-amber-50 border-amber-300 text-amber-700' : 'bg-white border-slate-200 text-slate-400'
-            }`}
-          >
-            <span>🦟 Dengue Hotspots</span>
-          </button>
+        <button
+          onClick={() => setShowHospitals(!showHospitals)}
+          className={`text-xs px-3 py-1.5 rounded-full border font-semibold transition-all ${
+            showHospitals
+              ? 'bg-sky-600 border-sky-600 text-white shadow-sm'
+              : 'bg-white border-slate-200 text-slate-400 hover:border-sky-300'
+          }`}
+        >
+          🏥 Hospitals ({filteredHospitals.length})
+        </button>
 
+        <button
+          onClick={() => setShowDonors(!showDonors)}
+          className={`text-xs px-3 py-1.5 rounded-full border font-semibold transition-all ${
+            showDonors
+              ? 'bg-rose-600 border-rose-600 text-white shadow-sm'
+              : 'bg-white border-slate-200 text-slate-400 hover:border-rose-300'
+          }`}
+        >
+          🩸 Donors ({donors.length})
+        </button>
+
+        <button
+          onClick={() => setShowDengue(!showDengue)}
+          className={`text-xs px-3 py-1.5 rounded-full border font-semibold transition-all ${
+            showDengue
+              ? 'bg-amber-500 border-amber-500 text-white shadow-sm'
+              : 'bg-white border-slate-200 text-slate-400 hover:border-amber-300'
+          }`}
+        >
+          🦟 Dengue Zones
+        </button>
+
+        <div className="ml-auto">
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className="text-xs py-1.5"
+            className="text-xs py-1.5 border border-slate-200 rounded-full"
           >
             <option value="All">All Districts</option>
             <option value="Dhaka">Dhaka</option>
@@ -108,7 +142,7 @@ const LiveHealthGrid = () => {
       </div>
 
       {/* Map Canvas */}
-      <div className="pulse-card overflow-hidden h-[540px] relative border border-slate-300 shadow-md">
+      <div className="pulse-card overflow-hidden relative border border-slate-200 shadow-md" style={{ height: '560px', borderRadius: '16px' }}>
         <MapContainer
           center={[23.76, 90.39]}
           zoom={12}
@@ -131,8 +165,7 @@ const LiveHealthGrid = () => {
                 <Popup>
                   <div className="text-xs p-1 max-w-[220px]">
                     <div className="font-bold text-slate-900 text-sm mb-1">{hosp.name}</div>
-                    <div className="text-slate-500 mb-2">{hosp.address}</div>
-                    
+                    <div className="text-slate-500 text-[11px] mb-2">{hosp.address}</div>
                     <div className="grid grid-cols-2 gap-1.5 bg-slate-50 p-2 rounded border border-slate-200 mb-2">
                       <div>
                         <div className="text-[10px] text-slate-500">ICU Available:</div>
@@ -141,22 +174,17 @@ const LiveHealthGrid = () => {
                         </div>
                       </div>
                       <div>
-                        <div className="text-[10px] text-slate-500">General Beds:</div>
+                        <div className="text-[10px] text-slate-500">General:</div>
                         <div className="font-bold text-slate-800 text-sm">
                           {hosp.beds?.general?.available || 0} / {hosp.beds?.general?.total || 0}
                         </div>
                       </div>
                     </div>
-
-                    <div className="text-[10px] text-slate-500 mb-2">
-                      📞 Hotline: <strong>{hosp.emergencyHotline || hosp.phone}</strong>
-                    </div>
-
                     <a
                       href={`tel:${hosp.emergencyHotline || hosp.phone}`}
-                      className="block text-center bg-sky-600 hover:bg-sky-700 text-white font-bold py-1 px-2 rounded text-[11px] text-decoration-none"
+                      className="block text-center bg-sky-600 hover:bg-sky-700 text-white font-bold py-1.5 px-2 rounded-lg text-[11px] no-underline"
                     >
-                      Call Emergency Admission
+                      📞 Call Emergency Admission
                     </a>
                   </div>
                 </Popup>
@@ -164,12 +192,12 @@ const LiveHealthGrid = () => {
             )
           ))}
 
-          {/* Blood Donors (Simulated coordinates in district) */}
+          {/* Blood Donors */}
           {showDonors && donors.map((don, idx) => (
             <Marker
               key={don._id || idx}
               position={[
-                23.73 + (Math.sin(idx * 2) * 0.06), 
+                23.73 + (Math.sin(idx * 2) * 0.06),
                 90.39 + (Math.cos(idx * 2) * 0.05)
               ]}
               icon={donorIcon}
@@ -185,12 +213,10 @@ const LiveHealthGrid = () => {
                   <div className="text-slate-500 text-[11px] mb-1">
                     📍 {don.upazila ? `${don.upazila}, ` : ''}{don.district}
                   </div>
-                  <div className="text-emerald-600 font-semibold text-[11px] mb-2">
-                    ✓ Available for Emergency Call
-                  </div>
+                  <div className="text-emerald-600 font-semibold text-[11px] mb-2">✓ Available for Emergency Call</div>
                   <a
                     href={`tel:${don.phone}`}
-                    className="block text-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 px-2 rounded text-[11px] text-decoration-none"
+                    className="block text-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-1.5 px-2 rounded-lg text-[11px] no-underline"
                   >
                     Call Donor: {don.phone}
                   </a>
@@ -199,7 +225,7 @@ const LiveHealthGrid = () => {
             </Marker>
           ))}
 
-          {/* Dengue Risk Cluster Hazard Rings */}
+          {/* Dengue Risk Cluster Rings */}
           {showDengue && dengueClusters.map((cluster, idx) => (
             <Circle
               key={idx}
@@ -216,9 +242,9 @@ const LiveHealthGrid = () => {
               <Popup>
                 <div className="text-xs p-1">
                   <div className="font-bold text-rose-600 mb-1">🦟 {cluster.name}</div>
-                  <div className="text-slate-600 mb-1">Vector Density Score: <strong>{cluster.score}/100</strong></div>
+                  <div className="text-slate-600 mb-1">Vector Score: <strong>{cluster.score}/100</strong></div>
                   <div className="text-[10px] text-slate-500">
-                    High Aedes mosquito infestation reported. Nearby clinics stocked with IV saline.
+                    High Aedes infestation. Nearby clinics stocked with IV saline.
                   </div>
                 </div>
               </Popup>
@@ -228,19 +254,25 @@ const LiveHealthGrid = () => {
 
         {/* Floating Map Legend */}
         <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-sm p-3 rounded-xl border border-slate-200 shadow-lg text-xs space-y-1.5">
-          <div className="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-1">Live Map Legend</div>
+          <div className="font-bold text-slate-700 text-[11px] uppercase tracking-wider mb-2">Map Legend</div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-sky-600"></span>
-            <span>Hospital with Live ICU status</span>
+            <span className="w-3 h-3 rounded-full bg-sky-600 flex-shrink-0" />
+            <span className="text-slate-600">Hospital with Live ICU</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-rose-600"></span>
-            <span>Verified Ready Blood Donor</span>
+            <span className="w-3 h-3 rounded-full bg-rose-600 flex-shrink-0" />
+            <span className="text-slate-600">Verified Blood Donor</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-rose-400 border border-dashed border-rose-600"></span>
-            <span>Dengue Outbreak Hotspot Zone</span>
+            <span className="w-3 h-3 rounded-full bg-rose-300 border border-dashed border-rose-500 flex-shrink-0" />
+            <span className="text-slate-600">Dengue Outbreak Zone</span>
           </div>
+        </div>
+
+        {/* Floating Live Indicator */}
+        <div className="absolute top-4 right-4 z-[400] bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full border border-emerald-200 shadow-sm text-xs text-emerald-700 font-semibold flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          Live Data
         </div>
       </div>
     </div>

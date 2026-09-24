@@ -2,9 +2,58 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'><path d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/></svg>" />
+
+    <!-- Favicon: heart SVG -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'><path d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'/></svg>"
+    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MediPulse BD (স্বাস্থ্যপালস) — Emergency Health & Epidemic Command</title>
+
+    <!-- Primary Meta -->
+    <title>MediPulse BD (স্বাস্থ্যপালস) — Emergency Health &amp; Epidemic Command</title>
+    <meta
+      name="description"
+      content="MediPulse BD is a comprehensive emergency health and epidemic command platform for Bangladesh — featuring real-time SOS alerts, blood bank finder, ambulance tracking, epidemic heatmaps, and multilingual support (Bengali + English)."
+    />
+    <meta name="keywords" content="MediPulse BD, Bangladesh health, emergency health platform, blood bank, ambulance tracker, epidemic heatmap, SOS alert, স্বাস্থ্যপালস" />
+    <meta name="author" content="MediPulse BD Team" />
+
+    <!-- Open Graph / Social Preview -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://medipulse-bd.vercel.app/" />
+    <meta property="og:title" content="MediPulse BD — Emergency Health & Epidemic Command" />
+    <meta
+      property="og:description"
+      content="Real-time emergency health dashboard for Bangladesh: SOS alerts, blood bank locator, ambulance tracking, epidemic heatmaps, and more."
+    />
+    <meta property="og:image" content="/og-cover.png" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="bn_BD" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MediPulse BD — Emergency Health & Epidemic Command" />
+    <meta
+      name="twitter:description"
+      content="Real-time emergency health dashboard for Bangladesh: SOS alerts, blood bank locator, ambulance tracking, epidemic heatmaps."
+    />
+    <meta name="twitter:image" content="/og-cover.png" />
+
+    <!-- Portfolio / PWA hints -->
+    <meta name="theme-color" content="#0284c7" />
+    <meta name="application-name" content="MediPulse BD" />
+
+    <!-- Google Fonts: Inter + Noto Sans Bengali -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,16 +61,111 @@
         theme: {
           extend: {
             colors: {
-              primary: '#0284c7',
+              primary:     '#0284c7',
               primaryDark: '#0369a1',
-              danger: '#ef4444'
-            }
-          }
-        }
+              primaryLight:'#e0f2fe',
+              danger:      '#ef4444',
+              dangerDark:  '#dc2626',
+              success:     '#10b981',
+              successDark: '#059669',
+              warning:     '#f59e0b',
+              surface:     '#ffffff',
+              bgMain:      '#f8fafc',
+            },
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif', '"Noto Sans Bengali"'],
+              bengali: ['"Noto Sans Bengali"', 'sans-serif'],
+            },
+            borderRadius: {
+              '4xl': '2rem',
+            },
+            boxShadow: {
+              'glow-primary': '0 0 0 3px rgba(14,165,233,0.25), 0 8px 32px rgba(14,165,233,0.15)',
+              'glow-danger':  '0 0 0 3px rgba(244,63,94,0.25),  0 8px 32px rgba(244,63,94,0.15)',
+              'glow-success': '0 0 0 3px rgba(16,185,129,0.25), 0 8px 24px rgba(16,185,129,0.12)',
+              'card':         '0 4px 16px rgba(0,0,0,0.08)',
+              'card-hover':   '0 24px 64px rgba(0,0,0,0.12)',
+              'xl-soft':      '0 20px 60px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)',
+            },
+            animation: {
+              'fade-in-up':      'fadeInUp 0.5s cubic-bezier(0.22,1,0.36,1) forwards',
+              'fade-in-scale':   'fadeInScale 0.4s cubic-bezier(0.22,1,0.36,1) forwards',
+              'slide-in-right':  'slideInRight 0.4s ease-out forwards',
+              'slide-in-left':   'slideInLeft 0.4s ease-out forwards',
+              'shimmer':         'shimmer 1.6s ease-in-out infinite',
+              'marquee':         'marqueeScroll 35s linear infinite',
+              'gradient-shift':  'gradientShift 6s ease infinite',
+              'spin-slow':       'spinSlow 3s linear infinite',
+              'sos':             'sosPulse 2.2s ease-in-out infinite',
+              'float':           'float 4s ease-in-out infinite',
+              'aurora':          'auroraMove 12s ease-in-out infinite',
+              'border-glow':     'borderGlow 3s ease-in-out infinite',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%':   { opacity: '0', transform: 'translateY(24px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeInScale: {
+                '0%':   { opacity: '0', transform: 'scale(0.96) translateY(10px)' },
+                '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+              },
+              slideInRight: {
+                '0%':   { opacity: '0', transform: 'translateX(32px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)' },
+              },
+              slideInLeft: {
+                '0%':   { opacity: '0', transform: 'translateX(-32px)' },
+                '100%': { opacity: '1', transform: 'translateX(0)' },
+              },
+              shimmer: {
+                '0%':   { backgroundPosition: '-800px 0' },
+                '100%': { backgroundPosition: '800px 0' },
+              },
+              marqueeScroll: {
+                '0%':   { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+              gradientShift: {
+                '0%':   { backgroundPosition: '0% 50%' },
+                '50%':  { backgroundPosition: '100% 50%' },
+                '100%': { backgroundPosition: '0% 50%' },
+              },
+              sosPulse: {
+                '0%,100%': { transform: 'scale(1)',    opacity: '1',    boxShadow: '0 0 0 0 rgba(244,63,94,0.5)' },
+                '50%':     { transform: 'scale(1.03)', opacity: '0.9',  boxShadow: '0 0 0 8px rgba(244,63,94,0)' },
+              },
+              spinSlow: {
+                '0%':   { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
+              },
+              float: {
+                '0%,100%': { transform: 'translateY(0px)' },
+                '50%':     { transform: 'translateY(-8px)' },
+              },
+              auroraMove: {
+                '0%':   { transform: 'translate(0,0) scale(1)' },
+                '33%':  { transform: 'translate(30px,-20px) scale(1.05)' },
+                '66%':  { transform: 'translate(-20px,15px) scale(0.97)' },
+                '100%': { transform: 'translate(0,0) scale(1)' },
+              },
+              borderGlow: {
+                '0%,100%': { borderColor: 'rgba(14,165,233,0.4)', boxShadow: '0 0 12px rgba(14,165,233,0.1)' },
+                '50%':     { borderColor: 'rgba(14,165,233,0.8)', boxShadow: '0 0 20px rgba(14,165,233,0.2)' },
+              },
+            },
+          },
+        },
       }
     </script>
+
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
   </head>
   <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen">
     <div id="root"></div>
